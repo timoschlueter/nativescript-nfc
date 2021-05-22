@@ -7,6 +7,7 @@ import {
   NfcUriProtocols,
   WriteTagOptions
 } from "./nfc.common";
+import {Utils} from "@nativescript/core";
 
 export interface NfcSessionInvalidator {
   invalidateSession(): void;
@@ -78,7 +79,9 @@ export class Nfc implements NfcApi, NfcSessionInvalidator {
               );
             } else {
               // execute on the main thread with this trick, so UI updates are not broken
-              Promise.resolve().then(() => callback(data));
+              Utils.executeOnMainThread(() => {
+                return callback(data);
+              });
             }
           },
           options
